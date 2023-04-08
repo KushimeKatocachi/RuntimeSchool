@@ -1,8 +1,8 @@
 package Experience;
 
-public class maxFunction {
+public class maxFunktion {
     public static void max(int a, int b) {
-        if(a>b) {
+        if (a > b) {
             System.out.println(a);
         } else {
             System.out.println(b);
@@ -11,5 +11,7 @@ public class maxFunction {
 
     public static void main(String[] args) {
         max(2, 3);
+
     }
 }
+
