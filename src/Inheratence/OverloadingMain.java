@@ -1,6 +1,6 @@
 package Inheratence;
 
-public class Test1 extends Overloading{
+public class OverloadingMain extends Overloading{
     public static void main(String[] args) {
         Overloading overloading = new Overloading();
         overloading.test(222, 22);
