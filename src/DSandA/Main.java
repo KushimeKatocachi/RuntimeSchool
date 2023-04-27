@@ -18,38 +18,43 @@ public class Main {
 
         for (int i = 0; i < q; i++) {
             String[] query = scanner.nextLine().split(" ");
-            if (query[0].equals("RESET")) {
-                int dc = Integer.parseInt(query[1]) - 1;
-                restarts[dc] += 1;
-                for (int j = 0; j < m; j++) {
-                    servers[dc][j] = m;
-                }
-            } else if (query[0].equals("DISABLE")) {
-                int dc = Integer.parseInt(query[1]) - 1;
-                int server = Integer.parseInt(query[2]) - 1;
-                servers[dc][server] = 0;
-            } else if (query[0].equals("GETMAX")) {
-                int maxProd = -1;
-                int maxDc = -1;
-                for (int j = 0; j < n; j++) {
-                    int prod = restarts[j] * sum(servers[j]);
-                    if (prod > maxProd) {
-                        maxProd = prod;
-                        maxDc = j;
+            switch (query[0]) {
+                case "RESET" -> {
+                    int dc = Integer.parseInt(query[1]) - 1;
+                    restarts[dc] += 1;
+                    for (int j = 0; j < m; j++) {
+                        servers[dc][j] = m;
                     }
                 }
-                System.out.println(maxDc + 1);
-            } else if (query[0].equals("GETMIN")) {
-                int minProd = Integer.MAX_VALUE;
-                int minDc = -1;
-                for (int j = 0; j < n; j++) {
-                    int prod = restarts[j] * sum(servers[j]);
-                    if (prod < minProd) {
-                        minProd = prod;
-                        minDc = j;
-                    }
+                case "DISABLE" -> {
+                    int dc = Integer.parseInt(query[1]) - 1;
+                    int server = Integer.parseInt(query[2]) - 1;
+                    servers[dc][server] = 0;
                 }
-                System.out.println( minDc + 1);
+                case "GETMAX" -> {
+                    int maxProd = -1;
+                    int maxDc = -1;
+                    for (int j = 0; j < n; j++) {
+                        int prod = restarts[j] * sum(servers[j]);
+                        if (prod > maxProd) {
+                            maxProd = prod;
+                            maxDc = j;
+                        }
+                    }
+                    System.out.println(maxDc + 1);
+                }
+                case "GETMIN" -> {
+                    int minProd = Integer.MAX_VALUE;
+                    int minDc = -1;
+                    for (int j = 0; j < n; j++) {
+                        int prod = restarts[j] * sum(servers[j]);
+                        if (prod < minProd) {
+                            minProd = prod;
+                            minDc = j;
+                        }
+                    }
+                    System.out.println(minDc + 1);
+                }
             }
         }
     }
