@@ -21,6 +21,11 @@ public class Test7 {
         }
         System.out.println(maxIndex);
         System.out.println(minIndex);
+
+        for (WeekDay weekDay : WeekDay.valueOf()) {
+            System.out.println(weekDay);
+
+        }
     }
 }
 
