@@ -1,62 +1,77 @@
 package DSandA;
 
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Arrays;
 
 public class Mein1 {
-    public static void main(String[] args) {
-
-
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int m = sc.nextInt();
-        int q = sc.nextInt();
-
-        int[][] dc = new int[n][m];
-        for (int i = 0; i < n; i++) {
-            Arrays.fill(dc[i], 1); // изначально все включены
-        }
-
-        int[] dr = new int[m]; // накапливаем количество перезапусков
-        int[] dw = new int[n];
-        Arrays.fill(dw, m);
-
-        for (int i = 0; i < q; i++) {
-            String cmd = sc.next();
-            if (cmd.equals("RESET")) {
-                int index = sc.nextInt();
-                Arrays.fill(dc[index - 1], 1);
-                dr[index - 1]++;
-                dw[index - 1] = m;
-            } else if (cmd.equals("DISABLE")) {
-                i = sc.nextInt();
-                int j = sc.nextInt();
-                if (dc[i - 1][j - 1] == 1) {
-                    dw[i - 1]--;
-                }
-                dc[i - 1][j - 1] = 0;
-            } else if (cmd.equals("GETMAX")) {
-                int ans = 1;
-                int maxVal = Integer.MIN_VALUE;
-                for (int j = 0; j < n; j++) {
-                    int val = dr[j] * dw[j];
-                    if (val > maxVal) {
-                        maxVal = val;
-                        ans = j + 1;
-                    }
-                }
-                System.out.println(ans);
-            } else if (cmd.equals("GETMIN")) {
-                int ans = 1;
-                int minVal = Integer.MAX_VALUE;
-                for (int j = 0; j < n; j++) {
-                    int val = dr[j] * dw[j];
-                    if (val < minVal) {
-                        minVal = val;
-                        ans = j + 1;
-                    }
-                }
-                System.out.println(ans);
+    public static int getMinDataCenter(int[][] matrix, int[] resets, int dcCounts) {
+        int min = resets[0] * countServers(matrix[0], 1);
+        int minNumber = 1;
+        for(int i = 1; i < dcCounts; i++) {
+            int localMin = resets[i] * countServers(matrix[i], 1);
+            if(min > localMin) {
+                min = localMin;
+                minNumber = i + 1;
             }
         }
+        return minNumber;
+    }
+
+    public static int getMaxDataCenter(int[][] matrix, int[] resets, int dcCounts) {
+        int max = resets[0] * countServers(matrix[0], 1);
+        int maxNumber = 1;
+        for(int i = 1; i < dcCounts; i++) {
+            int localMax = resets[i] * countServers(matrix[i], 1);
+            if(max < localMax) {
+                max = localMax;
+                maxNumber = i + 1;
+            }
+        }
+        return maxNumber;
+    }
+
+    public static int countServers(int[] array, int value) {
+        return (int)Arrays.stream(array).filter(item -> item == value).count();
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader("input.txt"));
+            String[] firstLine = br.readLine().split(" ");
+            int dcCounts = Integer.parseInt(firstLine[0]);
+            int serverCounts = Integer.parseInt(firstLine[1]);
+            int lineCounts = Integer.parseInt(firstLine[2]);
+
+            int[][] serversMatrix = new int[dcCounts][serverCounts];
+            for(int[] row: serversMatrix) {
+                Arrays.fill(row, 1);
+            }
+            int[] resetArray = new int[dcCounts];
+
+            for(int i = 0; i < lineCounts; i++) {
+                String[] line = br.readLine().split(" ");
+                String command = line[0];
+                int[] argse = Arrays.stream(line).skip(1).mapToInt(Integer::parseInt).toArray();
+                switch (command) {
+                    case "DISABLE" -> serversMatrix[argse[0] - 1][argse[1] - 1] = 0;
+                    case "RESET" -> {
+                        Arrays.fill(serversMatrix[argse[0] - 1], 1);
+                        resetArray[argse[0] - 1] += 1;
+                    }
+                    case "GETMIN" -> System.out.println(getMinDataCenter(serversMatrix, resetArray, dcCounts));
+                    case "GETMAX" -> System.out.println(getMaxDataCenter(serversMatrix, resetArray, dcCounts));
+                    default -> {
+                    }
+                }
+            }
+        } catch (IOException | NumberFormatException e) {
+            throw new RuntimeException(e);
+        }
+
+        br.close();
     }
 }
+
