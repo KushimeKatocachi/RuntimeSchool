@@ -25,7 +25,11 @@ public class Player {
             if (slot >= weaponsSlots.length) {
                 System.out.println("Выбран недопустимый слот оружия.");
                 return;
+            } else if (slot == -1) {
+                break;
+
             } else getSlotsCount();
+
 
         }
         Weapon weapon = weaponsSlots[slot];
